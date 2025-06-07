@@ -17,6 +17,7 @@ on:
 
 env:
   DOCKER_REPO: lucirleisantos/cw_fazer-ai
+
 jobs:
   build:
     strategy:
@@ -39,14 +40,14 @@ jobs:
           platform=${{ matrix.platform }}
           echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
 
-      # - name: Strip enterprise code
-      #   run: |
-      #     rm -rf enterprise
-      #     rm -rf spec/enterprise
+      #- name: Strip enterprise code
+      #  run: |
+      #    rm -rf enterprise
+      #    rm -rf spec/enterprise
 
-      # - name: Set Chatwoot edition
-      #   run: |
-      #     echo -en '\nENV CW_EDITION="ce"' >> docker/Dockerfile
+      - name: Set Chatwoot edition
+        run: |
+          echo -en '\nENV CW_EDITION="ce"' >> docker/Dockerfile
 
       - name: Set Docker Tags
         run: |
@@ -126,7 +127,7 @@ jobs:
           else
             TAG="${DOCKER_REPO}:${SANITIZED_REF}-ce"
           fi
-
+          
           docker buildx imagetools create -t $TAG \
             $(printf '${{ env.DOCKER_REPO }}@sha256:%s ' *)
 
@@ -140,5 +141,5 @@ jobs:
           else
             TAG="${DOCKER_REPO}:${SANITIZED_REF}-ce"
           fi
-
+          
           docker buildx imagetools inspect $TAG
